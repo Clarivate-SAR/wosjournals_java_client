@@ -1,0 +1,3150 @@
+openapi: 3.0.0
+info:
+  description: "This API provides journal-level metadata and metrics for all journals\
+    \ in the Journal Citation Reports™ covered in the Web of Science Core Collection,\
+    \ including the Journal Impact Factor™ and other new metrics. Integrate journal\
+    \ data into your internal systems or retrieve journal indicators for bibliometrics\
+    \ studies.\n\n## Resources\nThis API follows the REST approach to disclose resources\
+    \ in URL format. Only the GET method is currently available to perform requests\
+    \ over HTTP.\n\nThe API is available on the [Clarivate Developer Portal](https://developer.clarivate.com/apis/wos-journal).\
+    \ The access requires registration on the Portal and approval from the Clarivate\
+    \ Sales/Product teams to entitle to the API.\n\n## Credentials\nAll requests require\
+    \ authentication with an API Key authentication flow. For more details, check\
+    \ the [Guide](https://developer.clarivate.com/help/api-access#key_access).\n\n\
+    ## API Client Libraries\nThe current languages/frameworks are supported: [Python](https://github.com/Clarivate-SAR/wosjournals-py-client)\
+    \ | [Java](https://github.com/Clarivate-SAR/wosjournals_java_client) | [Javascript](https://github.com/Clarivate-SAR/wosjournals_javascript_client)\n\
+    \n## Content\nYou can learn more about content at [Journal Citation Reports™ Product\
+    \ page](https://clarivate.com/webofsciencegroup/solutions/journal-citation-reports/),\
+    \ or in the [documentation](http://jcr.help.clarivate.com/Content/home.htm).\n\
+    \n## <a name=\"search\"></a> Search (query parameter `q=`)\nThis API supports\
+    \ free-text search for a journal name, abbreviation, ISSN code, publisher, and\
+    \ Web of Science™ category name (only `/categories` endpoint). You need to provide\
+    \ a complete and valid ISSN code pattern; otherwise, the API will not look up\
+    \ for ISSN codes.\n\n### Boolean operators\n| Operator    | Description  | Example|\n\
+    |-----|-----|------------------|\n| + / \" \" | Search by two or more terms in\
+    \ the same field. Blank space is the same as an AND operator. The search retrieves\
+    \ all the records that contain the terms, e.g., | `/journals?q=matrix biology`<br>\
+    \ `/journals?q=nature+group` |\n| OR | Search by at least one term in the field.\
+    \ The search retrieves all the records that contain one of the terms, e.g., |\
+    \ `/journals?q=gas OR oil` |\n| NOT / - | Search by excluding specific terms.\
+    \ The search retrieves all the records that match the query specifics, e.g., |\
+    \ `/journals?q=genetics -nature` |\n\n### Special symbols\nThe wildcards ( __*__\
+    \ ) are allowed in the search that starts with the search query&#58; `/journals?q=nano*`\
+    \ will search indications that start from __nano__&#58; for example, _Nanotechnology_\
+    \ or _nanotubes_.\n\nPlease note&#58; the free text search query (with the parameter\
+    \ `q=`) should contain at least three symbols.\n\n## Filtering\nThe API supports\
+    \ several filters for Journals and Web of Science™ Categories, narrowing down\
+    \ the initial list of entities or search results.\n\nThere are two types of filters:\n\
+    \n- Filter by one or multiple **values**: *edition*, *categoryCode*, *jcrYear*,\
+    \ *jifQuartile*\n- Filter by **range**: *jif*, *jifPercentile*, *jci*, \n\n###\
+    \ Filter by values\nThe filter name goes before the equals sign, followed by one\
+    \ or multiple filter values, separated by a semicolon, like `categoryCode=RZ;RU`.\
+    \ You can combine various filters with or without the search. Filters are separated\
+    \ by an ampersand (**&amp;**): `q=nature&categoryCode=RU;KM&jcrYear=2018`\n\n\
+    Please note&#58; filter by *jcrYear* allows only one year value as an input\n\n\
+    ### <a name='range'></a> Filter by range\nThe API supports range filtering for\
+    \ Journal Impact Factor (*jif*) or Journal Impact Factor Percentile (*jifPercentile*)\
+    \ with the following operators:\n\n- ***eq*** (equal): if a Journal Impact Factor\
+    \ (Percentile) is equal to a specific number.<br /> For example: for `jif=eq:5.032`\
+    \ the result will include journals with Journal Impact Factor = 5.032.<br /> Not\
+    \ combinable with any other operator\n- ***gt*** (greater than): if a Journal\
+    \ Impact Factor (Percentile) is greater than a specific number.<br /> For example:\
+    \ for `jif=gt:5` the result will include journals with Journal Impact Factor =\
+    \ 5.001 and higher.<br /> Combinable with *lt* and *lte* operators\n- ***gte***\
+    \ (greater than equal): if a Journal Impact Factor (Percentile) is greater than\
+    \ or equal to a specific number.<br /> For example: for `jif=gte:5` the result\
+    \ will include journals with Journal Impact Factor = 5.000 and higher.<br /> Combinable\
+    \ with *lt* and *lte* operators\n- ***lt*** (less than): if a Journal Impact Factor\
+    \ (Percentile) is less than a specific number.<br /> For example: for `jif=lt:5`\
+    \ the result will include journals with Journal Impact Factor = 4.999 and less.<br\
+    \ /> Combinable with *gt* and *gte* operators\n- ***lte*** (less than equal):\
+    \ if a Journal Impact Factor (Percentile) is less than a specific number.<br />\
+    \ For example: for `jif=lte:5` the result will include journals with Journal Impact\
+    \ Factor = 5.000 and less.<br /> Combinable with *gt* and *gte* operators\n\n\
+    Use `AND` to combine two operators, e.g.,`jifPercentile=gte:50 AND lte:80` responses\
+    \ with all journals in a percentile range from 50% to 80% (both included).\n\n\
+    ## Pagination\nTo ensure fast response time, each search or multiple entity calls\
+    \ (such as `/journals` or `/categories/ID/cited/year/YYYY`) retrieve only a certain\
+    \ number of hits/records.\n\nThere are two optional request parameters to browse\
+    \ along with the result&#58; _limit_ and _page_.\n\n- limit&#58; Number of returned\
+    \ results, ranging from 0 to 50 (default **10**)\n- page&#58; Specifying a page\
+    \ to retrieve (default **1**)\n\nMoreover, this information is shown in the response\
+    \ body, in the tag **metadata**&#58;\n\n```json\n\"metadata\": {\n  \"total\"\
+    : 91,\n  \"page\": 1,\n  \"limit\": 10\n}\n```\n## Errors\nThe WoS Journals API\
+    \ uses conventional HTTP success or failure status codes. For errors, some extra\
+    \ information is included to indicate what went wrong in the JSON response. The\
+    \ list of HTTP codes is listed below.\n\n| Code  | Title  | Description |\n|---|---|---|\n\
+    | 400  | Bad request  | Request syntax error |\n| 401  | Unauthorized  | The API\
+    \ key is invalid or missed |\n| 404  | Not found  | The resource is not found\
+    \ |\n| 405 | Method not allowed | Method other than GET is not allowed |\n| 50X\
+    \  | Server errors  | Technical error with servers|\nEach error response (except\
+    \ `401 Unauthorized` error) contains the code of the error, the title of the error\
+    \ and detailed description of the error: a misprint in an endpoint, wrong URL\
+    \ parameter, etc. The example of the error message is shown below:\n\n```json\n\
+    \"error\": {\n  \"status\": 404,\n  \"title\": \"Resource couldn't be found\"\
+    ,\n  \"details\": \"There is no information in WoS Journals API about the identifier\
+    \ ABC_DEF for the Journals content area. Sorry :(\"\n}\n```\nFor the `401 Unauthorized`\
+    \ error the response body is a little bit different:\n```json\n{\n  \"error_description\"\
+    : \"The access token is missing\",\n  \"error\": \"invalid_request\"\n}\n```"
+  license:
+    name: Clarivate Content as a Service Licence
+    url: https://clarivate.com/wp-content/uploads/dlm_uploads/2019/08/Product-Service-Terms.pdf
+  title: Web of Science™ Journals API
+  version: 1.0.0
+servers:
+- url: http://wos-journals-snapshot.cortellis.int.clarivate.com
+tags:
+- description: Journals
+  name: Journals
+- description: Categories
+  name: Categories
+paths:
+  /journals:
+    get:
+      description: |-
+        The endpoint allows to search, filter, or browse across the Journals content.
+
+        The endpoint doesn't require any parameter to return results, although only main information for the first ten records sorted alphabetically will be retrieved.
+
+        To get comprehensive results, a set of parameters could be applied:
+        - `q`: ISSN or title/publisher search
+        - `edition`: filter by journal edition
+        - `categoryCode`: filter by WoS journal category
+        - `jcrYear`: filter by Journal Citation Report Year (since 1997)
+        - `jif`: filter by Journal Impact Factor (JIF)
+        - `jifPercentile`: filter by Journal Impact Factor Percentile (0-100)
+        - `jifQuartile`: filter by Journal Impact Factor Rank Quartile
+        - `jci`: filter by Journal Citation Indicator (JCI)
+        - `limit`: set the limit of records on the page (1-50)
+        - `page`: set the result page
+
+        By default, all the responses are sorted alphabetically, only in case of search the results will be sorted by relevance.
+
+        The response contains:
+        - Main information about the number of records found, page and limit
+        - Journals unique ID (based on JCR abbreviated title)
+        - API Link to Journal record
+        - Journal title
+        - Search matches with the found phrase ***&lt;em&gt;*** *highlighted* ***&lt;/em&gt;*** - only if parameter `q` is requested
+        - Category information (unique ID, category name, and edition) - only if the parameter `categoryCode` or `edition` is requested
+        - Link to the Journal Citation Report - only if parameter `jcrYear` is requested
+        - Metrics information (Impact metrics) - only if parameter `jif` or `jci` is requested
+        - Metrics information (Source metrics) - only if parameter `jifPercentile` is requested
+        - Ranks information (JIF rank and quartile within the category) - only if parameter `jifQuartile` is requested
+      parameters:
+      - description: |-
+          Free-text search by journal name (e.g. *Nature Genetics*), JCR abbreviation (e.g. *NAT GENET*), publisher (e.g. *PUBLIC LIBRARY SCIENCE*) or [ISSN / eISSN code](https://www.issn.org/understanding-the-issn/what-is-an-issn/) (e.g. *1061-4036*)
+
+          The search logic is described in the section [Search](#search).
+        explode: true
+        in: query
+        name: q
+        required: false
+        schema:
+          example: 0945-053X
+          type: string
+        style: form
+      - description: |-
+          Filter by Web of Science Citation Index. The following indexes (editions) are presented:
+          - SCIE - Science Citation Index Expanded
+          - SSCI - Social Sciences Citation Index
+          - AHCI - Arts & Humanities Citation Index
+          - ESCI - Emerging Sources Citation Index
+
+          Multiple values are allowed, separated by a semicolon ( **;** )
+        explode: true
+        in: query
+        name: edition
+        required: false
+        schema:
+          enum:
+          - SCIE
+          - SSCI
+          - AHCI
+          - ESCI
+          type: string
+        style: form
+      - description: |-
+          Filter journals by category identifiers.
+
+          Each journal in JCR is assigned to at least one of the subject categories, indicating a general area of science or the social sciences. Journals may be included in more than one subject category.
+
+          Multiple values are allowed, separated by a semicolon ( **;** )
+        explode: true
+        in: query
+        name: categoryCode
+        required: false
+        schema:
+          example: IP
+          type: string
+        style: form
+      - description: |-
+          Filter by Journal Citation Report year (from 1997).
+
+          **NOTE:** The filter **jcrYear** is mandatory while using **jif**, **jifPercentile**, **jifQuartile**, and **jci** filters
+
+          Only one value is allowed.
+        explode: true
+        in: query
+        name: jcrYear
+        required: false
+        schema:
+          example: 2019
+          format: int32
+          type: integer
+        style: form
+      - description: |-
+          Filter by [Journal Impact Factor](http://jcr.help.clarivate.com/Content/jcr3-glossary.htm) (JIF).
+
+          **NOTE:** The filter **jcrYear** is mandatory while using **jif** filter
+
+          Filter logic is described in the section [Filter by range](#range)
+        explode: true
+        in: query
+        name: jif
+        required: false
+        schema:
+          example: gte:5.0
+          type: string
+        style: form
+      - description: |-
+          Filter by [Journal Impact Factor Percentile](http://jcr.help.clarivate.com/Content/glossary-journal-impact-factor-percentile.htm), ranging from 0 to 100
+
+          **NOTE:** The filter **jcrYear** is mandatory while using **jifPercentile** filter
+
+          Filter logic is described in the section [Filter by range](#range)
+        explode: true
+        in: query
+        name: jifPercentile
+        required: false
+        schema:
+          example: gte:70.0 AND lte:90.0
+          type: string
+        style: form
+      - description: |-
+          Filter by JIF quartile rank for a category, from highest to lowest based on their JIF value: <br />Q1 is represented by the top 25% of journals in the category; <br />Q2 is occupied by journals in the 25 to 50% group; <br />Q3 is occupied by journals in the 50 to 75% group; <br />Q4 is occupied by journals in the 75 to 100% group.
+
+          **NOTE:** The filter **jcrYear** is mandatory while using **jifQuartile** filter
+
+          Multiple values are allowed, separated by a semicolon ( **;** )
+        explode: true
+        in: query
+        name: jifQuartile
+        required: false
+        schema:
+          enum:
+          - Q1
+          - Q2
+          - Q3
+          - Q4
+          type: string
+        style: form
+      - description: |-
+          Filter by [Journal Citation Indicator](http://jcr.help.clarivate.com/Content/jcr3-glossary.htm) (JCI).
+
+          **NOTE:** The filter **jcrYear** is mandatory while using **jci** filter
+
+          Filter logic is described in the section [Filter by range](#range)
+        explode: true
+        in: query
+        name: jci
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |-
+          Filter by JCI quartile rank for a category, from highest to lowest based on their JCI value:
+          Q1 is represented by the top 25% of journals in the category;
+          Q2 is occupied by journals in the 25 to 50% group;
+          Q3 is occupied by journals in the 50 to 75% group;
+          Q4 is occupied by journals in the 75 to 100% group.
+
+          **NOTE:** The filter **jcrYear** is mandatory while using **jciQuartile** filter
+
+          Multiple values are allowed, separated by a semicolon ( **;** )
+        explode: true
+        in: query
+        name: jciQuartile
+        required: false
+        schema:
+          enum:
+          - Q1
+          - Q2
+          - Q3
+          - Q4
+          type: string
+        style: form
+      - description: |-
+          Filter by Journal Citation Indicator (JCI) percentile, ranging from 0 to 100
+
+          **NOTE:** The filter **jcrYear** is mandatory while using **jciPercentile** filter
+
+          Filter logic is described in the section [Filter by range](#range)
+        explode: true
+        in: query
+        name: jciPercentile
+        required: false
+        schema:
+          example: gte:70.0 AND lte:90.0
+          type: string
+        style: form
+      - description: Specifying a page to retrieve
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          format: int32
+          type: integer
+        style: form
+      - description: Number of returned results, ranging from 0 to 50
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          format: int32
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Journals full list:
+                  value:
+                    metadata:
+                      page: 1
+                      limit: 10
+                    hits:
+                    - id: 2D_MATER
+                      self: /journals/2D_MATER
+                      name: 2D Materials
+                    - id: 3_BIOTECH
+                      self: /journals/3_BIOTECH
+                      name: 3 Biotech
+                    - id: 3D_PRINT_ADDIT_MANUF
+                      self: /journals/3D_PRINT_ADDIT_MANUF
+                      name: 3D Printing and Additive Manufacturing
+                    - id: 4OR-Q_J_OPER_RES
+                      self: /journals/4OR-Q_J_OPER_RES
+                      name: 4OR-A Quarterly Journal of Operations Research
+                    - id: ANAE
+                      self: /journals/ANAE
+                      name: A N A E-APPROCHE NEUROPSYCHOLOGIQUE DES APPRENTISSAGES
+                        CHEZ L ENFANT
+                    - id: AAOHN_J
+                      self: /journals/AAOHN_J
+                      name: AAOHN JOURNAL
+                    - id: AAPG_BULL
+                      self: /journals/AAPG_BULL
+                      name: AAPG BULLETIN
+                    - id: AAPS_J
+                      self: /journals/AAPS_J
+                      name: AAPS Journal
+                    - id: AAPS_PHARMSCI
+                      self: /journals/AAPS_PHARMSCI
+                      name: AAPS PHARMSCI
+                    - id: AAPS_PHARMSCITECH
+                      self: /journals/AAPS_PHARMSCITECH
+                      name: AAPS PHARMSCITECH
+                Search by word "PLOS":
+                  value:
+                    metadata:
+                      total: 8
+                      page: 1
+                      limit: 10
+                    hits:
+                    - id: PLOS_BIOL
+                      self: /journals/PLOS_BIOL
+                      name: PLOS BIOLOGY
+                      matches:
+                      - field: name
+                        value:
+                        - <em>PLOS</em> BIOLOGY
+                      - field: jcrTitle
+                        value:
+                        - <em>PLOS</em> BIOL
+                      - field: isoTitle
+                        value:
+                        - <em>PLoS</em>. Biol.
+                    - id: PLOS_GENET
+                      self: /journals/PLOS_GENET
+                      name: PLoS Genetics
+                      matches:
+                      - field: name
+                        value:
+                        - <em>PLoS</em> Genetics
+                      - field: jcrTitle
+                        value:
+                        - <em>PLOS</em> GENET
+                      - field: isoTitle
+                        value:
+                        - <em>PLoS</em> Genet.
+                    - id: PLOS_MED
+                      self: /journals/PLOS_MED
+                      name: PLOS MEDICINE
+                      matches:
+                      - field: name
+                        value:
+                        - <em>PLOS</em> MEDICINE
+                      - field: jcrTitle
+                        value:
+                        - <em>PLOS</em> MED
+                      - field: isoTitle
+                        value:
+                        - <em>PLos</em> Med.
+                    - id: PLOS_ONE
+                      self: /journals/PLOS_ONE
+                      name: PLoS One
+                      matches:
+                      - field: name
+                        value:
+                        - <em>PLoS</em> One
+                      - field: jcrTitle
+                        value:
+                        - <em>PLOS</em> ONE
+                      - field: isoTitle
+                        value:
+                        - <em>PLoS</em> One
+                    - id: PLOS_PATHOG
+                      self: /journals/PLOS_PATHOG
+                      name: PLoS Pathogens
+                      matches:
+                      - field: name
+                        value:
+                        - <em>PLoS</em> Pathogens
+                      - field: jcrTitle
+                        value:
+                        - <em>PLOS</em> PATHOG
+                      - field: isoTitle
+                        value:
+                        - <em>PLoS</em> Pathog.
+                    - id: PLOS_CLIN_TRIALS
+                      self: /journals/PLOS_CLIN_TRIALS
+                      name: PLoS Clinical Trials
+                      matches:
+                      - field: name
+                        value:
+                        - <em>PLoS</em> Clinical Trials
+                      - field: jcrTitle
+                        value:
+                        - <em>PLOS</em> CLIN TRIALS
+                      - field: isoTitle
+                        value:
+                        - <em>PLos</em> Clin. Trials
+                    - id: PLOS_COMPUT_BIOL
+                      self: /journals/PLOS_COMPUT_BIOL
+                      name: PLoS Computational Biology
+                      matches:
+                      - field: name
+                        value:
+                        - <em>PLoS</em> Computational Biology
+                      - field: jcrTitle
+                        value:
+                        - <em>PLOS</em> COMPUT BIOL
+                      - field: isoTitle
+                        value:
+                        - <em>PLoS</em> Comput. Biol.
+                    - id: PLOS_NEGLECT_TROP_D
+                      self: /journals/PLOS_NEGLECT_TROP_D
+                      name: PLoS Neglected Tropical Diseases
+                      matches:
+                      - field: name
+                        value:
+                        - <em>PLoS</em> Neglected Tropical Diseases
+                      - field: jcrTitle
+                        value:
+                        - <em>PLOS</em> NEGLECT TROP D
+                      - field: isoTitle
+                        value:
+                        - <em>Plos</em> Neglect. Trop. Dis.
+                Filter by year (2004) and JIF (5.000-8.000):
+                  value:
+                    metadata:
+                      total: 159
+                      page: 1
+                      limit: 10
+                    hits:
+                    - id: ACTA_CRYSTALLOGR_B
+                      self: /journals/ACTA_CRYSTALLOGR_B
+                      name: Acta Crystallographica Section B-Structural Science Crystal
+                        Engineering and Materials
+                      journalCitationReports:
+                      - year: 2004
+                        url: /journals/ACTA_CRYSTALLOGR_B/reports/year/2004
+                      metrics:
+                        impactMetrics:
+                          jif: "5.418"
+                    - id: ADV_DRUG_DELIVER_REV
+                      self: /journals/ADV_DRUG_DELIVER_REV
+                      name: ADVANCED DRUG DELIVERY REVIEWS
+                      journalCitationReports:
+                      - year: 2004
+                        url: /journals/ADV_DRUG_DELIVER_REV/reports/year/2004
+                      metrics:
+                        impactMetrics:
+                          jif: "7.763"
+                    - id: ADV_FUNCT_MATER
+                      self: /journals/ADV_FUNCT_MATER
+                      name: ADVANCED FUNCTIONAL MATERIALS
+                      journalCitationReports:
+                      - year: 2004
+                        url: /journals/ADV_FUNCT_MATER/reports/year/2004
+                      metrics:
+                        impactMetrics:
+                          jif: "5.679"
+                    - id: ADV_ATOM_MOL_OPT_PHY
+                      self: /journals/ADV_ATOM_MOL_OPT_PHY
+                      name: Advances In Atomic Molecular and Optical Physics
+                      journalCitationReports:
+                      - year: 2004
+                        url: /journals/ADV_ATOM_MOL_OPT_PHY/reports/year/2004
+                      metrics:
+                        impactMetrics:
+                          jif: "7.214"
+                    - id: ADV_CANCER_RES
+                      self: /journals/ADV_CANCER_RES
+                      name: Advances in Cancer Research
+                      journalCitationReports:
+                      - year: 2004
+                        url: /journals/ADV_CANCER_RES/reports/year/2004
+                      metrics:
+                        impactMetrics:
+                          jif: "6.200"
+                    - id: ADV_EXP_SOC_PSYCHOL
+                      self: /journals/ADV_EXP_SOC_PSYCHOL
+                      name: ADVANCES IN EXPERIMENTAL SOCIAL PSYCHOLOGY
+                      journalCitationReports:
+                      - year: 2004
+                        url: /journals/ADV_EXP_SOC_PSYCHOL/reports/year/2004
+                      metrics:
+                        impactMetrics:
+                          jif: "6.231"
+                    - id: ADV_IMMUNOL
+                      self: /journals/ADV_IMMUNOL
+                      name: Advances in Immunology
+                      journalCitationReports:
+                      - year: 2004
+                        url: /journals/ADV_IMMUNOL/reports/year/2004
+                      metrics:
+                        impactMetrics:
+                          jif: "7.929"
+                    - id: ADV_ORGANOMET_CHEM
+                      self: /journals/ADV_ORGANOMET_CHEM
+                      name: Advances in Organometallic Chemistry
+                      journalCitationReports:
+                      - year: 2004
+                        url: /journals/ADV_ORGANOMET_CHEM/reports/year/2004
+                      metrics:
+                        impactMetrics:
+                          jif: "5.500"
+                    - id: ADV_POLYM_SCI
+                      self: /journals/ADV_POLYM_SCI
+                      name: Advances in Polymer Science
+                      journalCitationReports:
+                      - year: 2004
+                        url: /journals/ADV_POLYM_SCI/reports/year/2004
+                      metrics:
+                        impactMetrics:
+                          jif: "7.320"
+                    - id: AGING_CELL
+                      self: /journals/AGING_CELL
+                      name: AGING CELL
+                      journalCitationReports:
+                      - year: 2004
+                        url: /journals/AGING_CELL/reports/year/2004
+                      metrics:
+                        impactMetrics:
+                          jif: "5.960"
+              schema:
+                $ref: '#/components/schemas/JournalList'
+          description: Journal list is sorted alphabetically when retrieving without
+            or with fitlers only, and by relevance when searching.
+      summary: Search and filter across JCR Journals
+      tags:
+      - Journals
+      x-accepts: application/json
+  /journals/{id}:
+    get:
+      description: |-
+        A journal entity contains:
+        - basic bibliographic information about the journal, including publisher, ISSN and e-ISSN (where available), open access status, language, frequency of publication, and Web of Science categorization.
+        - links to the multi-year Journal Citation Report data, starting from 1997.
+
+        For more information about Journal inclusion in the index, please visit [this page](http://jcr.help.clarivate.com/Content/scope-notes.htm)
+      parameters:
+      - description: |-
+          Journal unique identifier
+
+          Currently an identifier is a JCR abbreviation, where blank spaces are substituted with underscores (e.g. *PLOS ONE* Journal has the ID **PLOS_ONE**)
+        example: PLOS_ONE
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JournalRecord'
+          description: A successful response.
+      summary: Get journal by id
+      tags:
+      - Journals
+      x-accepts: application/json
+  /journals/{id}/reports/year/{year}:
+    get:
+      description: |-
+        This endpoint returns the information about Journal Citation Report by year.
+
+        The response contains:
+        - Journal name and link to the Journal entry
+        - Key indications (metrics): impact, source and influence
+        - Journal Impact Factor and ESI citations ranks
+        - Journal Source Data
+        - Three-year content analysis by country/region and organization
+        - Links to the related Cited/Citing reports
+      parameters:
+      - description: |-
+          Journal unique identifier
+
+          Currently an identifier is a JCR abbreviation, where blank spaces are substituted with underscores (e.g. *PLOS ONE* Journal has the ID **PLOS_ONE**)
+        example: PLOS_ONE
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Journal Citation Report year (jcrYear)
+        example: 2017
+        explode: false
+        in: path
+        name: year
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JournalReports'
+          description: OK
+      summary: Get journal metrics for a year
+      tags:
+      - Journals
+      x-accepts: application/json
+  /journals/{id}/cited/year/{year}:
+    get:
+      description: |-
+        Cited Journal data show how many citations a journal received in the JCR year. Cited journal data is relevant when analyzing metrics such as the Journal Impact Factor and Market Share.
+
+        The response contains:
+
+        - Citing **Journal** with the link to WoS Journal API entity
+        - **Cited Year (all)**:  The total number of citations from the citing journal. This total includes the number shown under each year and the number in the Rest column.
+        - **Cited Year (10 years interval)**: Publication year of the cited articles.
+        - **Cited Year (rest)**: All publication years of cited articles prior to the 10-year period defined by the table. For example, if the cited years shown are 2017-2008, the Rest column will show the number of citations from the citing journal in 2017 to articles published in the cited journal in 2007 and any earlier year.
+
+
+        Please see the detailed infomration in the [JCR Help page](http://jcr.help.clarivate.com/Content/cited-journal-data.htm)
+      parameters:
+      - description: Journal unique identifier
+        example: PLOS_ONE
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Journal Citation Report Year (from 1997)
+        example: 2017
+        explode: false
+        in: path
+        name: year
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      - description: Specifying a page to retrieve
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          format: int32
+          type: integer
+        style: form
+      - description: Number of returned results, ranging from 0 to 50
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          format: int32
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JournalsCited'
+          description: Citing journals are sorted in descending order. At the top
+            is the journal with the largest number of citations to the cited journal.
+      summary: Get journals that cite the journal for the JCR year
+      tags:
+      - Journals
+      x-accepts: application/json
+  /journals/{id}/citing/year/{year}:
+    get:
+      description: |-
+        The response contains:
+
+        - Cited **Journal** with the link to WoS Journal API entity
+        - **Cited Year (all)**:  The total number of citations to the cited journal. This total includes the number shown under each year and the number in the Rest column.
+        - **Cited Year (10 years interval)**: Publication year of the cited articles.
+        - **Cited Year (rest)**: All publication years of cited articles prior to the 10-year period defined by the table. For example, if the cited years shown are 2017-2008, the Rest column will show the number of citations from the citing journal in 2017 to articles published in the cited journal in 2007 and any earlier year.
+
+
+        Please see the detailed infomration in the [JCR Help page](http://jcr.help.clarivate.com/Content/citing-journal-data.htm)
+      parameters:
+      - description: An Journal ID
+        example: PLOS_ONE
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: A citing Year
+        example: 2017
+        explode: false
+        in: path
+        name: year
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      - description: Specifying a page to retrieve
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          format: int32
+          type: integer
+        style: form
+      - description: Number of returned results, ranging from 0 to 50
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          format: int32
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JournalsCiting'
+          description: OK
+      summary: Get journals that were cited by the journal for the JCR year
+      tags:
+      - Journals
+      x-accepts: application/json
+  /journals/{id}/history:
+    get:
+      description: TBD
+      parameters:
+      - description: |-
+          Journal unique identifier
+
+          Currently an identifier is a JCR abbreviation, where blank spaces are substituted with underscores (e.g. *PLOS ONE* Journal has the ID **PLOS_ONE**)
+        example: PLOS_ONE
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JournalHistoryRecord'
+          description: A successful response.
+      summary: Get journal history by id
+      tags:
+      - Journals
+      x-accepts: application/json
+  /categories:
+    get:
+      description: |-
+        The endpoint allows to search, filter, or browse across the Categories content.
+
+        The endpoint doesn't require any parameter to return results, although only main information for the first ten records sorted alphabetically will be retrieved.
+
+        To get comprehensive results, a set of parameters could be applied:
+        - `q`: Category name
+        - `edition`: filter by category edition
+        - `jcrYear`: filter by Category Report Year (since 203)
+        - `limit`: set the limit of records on the page (1-50)
+        - `page`: set the result page
+
+        By default, all the responses are sorted alphabetically, only in case of search the results will be sorted by relevance.
+
+        The response contains:
+        - Main information about the number of records found, page and limit
+        - Category unique ID (based on category code and edition)
+        - API Link to Category record
+        - Category title
+        - Search matches with the found phrase ***&lt;em&gt;*** *highlighted* ***&lt;/em&gt;*** - only if parameter `q` is requested
+        - Edition information - only if the parameter `edition` is requested
+        - Link to the Category Report - only if parameter `jcrYear` is requested
+      parameters:
+      - description: |-
+          Free-text search by category name.
+
+          Search logic is described in the section [Search](#search).
+        explode: true
+        in: query
+        name: q
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |-
+          Filter by Web of Sceince Citation Index. The following indexes (editions) are presented:
+          - SCIE - Science Citation Index Expanded (ournals across more than 170 disciplines)
+          - SSCI - Social Sciences Citation Index (journals across more than 50 social science disciplines)
+
+          Multiple values are allowed, separated by semicolon ( **;** )
+        explode: true
+        in: query
+        name: edition
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |-
+          Filter by Category Citation Report year (from 2003).
+
+          Only one value is allowed.
+        explode: true
+        in: query
+        name: jcrYear
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: Specifying a page to retrieve
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          format: int32
+          type: integer
+        style: form
+      - description: Number of returned results, ranging from 0 to 50
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          format: int32
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                metadata:
+                  total: 272
+                  limit: 10
+                  page: 1
+                hits:
+                - id: AAC
+                  self: /categories/AA_SCIE
+                  name: ACOUSTICS
+                - id: AFC
+                  self: /categories/AF_SCIE
+                  name: AGRICULTURAL ECONOMICS & POLICY
+                - id: AEC
+                  self: /categories/AE_SCIE
+                  name: AGRICULTURAL ENGINEERING
+                - id: ADC
+                  self: /categories/AD_SCIE
+                  name: AGRICULTURE DAIRY & ANIMAL SCIENCE
+                - id: AHC
+                  self: /categories/AH_SCIE
+                  name: AGRICULTURE MULTIDISCIPLINARY
+                - id: AMC
+                  self: /categories/AM_SCIE
+                  name: AGRONOMY
+                - id: AQC
+                  self: /categories/AQ_SCIE
+                  name: ALLERGY
+                - id: AYC
+                  self: /categories/AY_SCIE
+                  name: ANATOMY & MORPHOLOGY
+                - id: AZC
+                  self: /categories/AZ_SCIE
+                  name: ANDROLOGY
+              schema:
+                $ref: '#/components/schemas/CategoryList'
+          description: OK
+      summary: Search and filter across the journal categories
+      tags:
+      - Categories
+      x-accepts: application/json
+  /categories/{id}:
+    get:
+      description: |-
+        The category profile provides a comprehensive overview, beginning in 2003, for each of more than 230 different subject categories in the JCR.
+
+        Information contain the name, description and links to each JCR Category Year Report (starting from 2003)
+      parameters:
+      - description: Category ID, consisting of a two-letter category code and four-letter
+          edition, separated by **_** (i.e., ***RZ_SSCI*** or ***IP_SCIE***)
+        example: RU_SCIE
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryRecord'
+          description: OK
+      summary: Get a category
+      tags:
+      - Categories
+      x-accepts: application/json
+  /categories/{id}/reports/year/{year}:
+    get:
+      description: |-
+        For each JCR year all metrics related to a subject category in the Journal Citation Record are available, including: number of journals and articles in the category, Total Cites, Median Impact Factor, Aggregate Impact Factor, Aggregate Immediacy Index, and Cited and Citing category half-life.
+
+        Please find detailed information about the metrics in the Journals by JCR Year Report output
+      parameters:
+      - description: Category ID
+        example: RU_SCIE
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Category report year
+        example: 2016
+        explode: false
+        in: path
+        name: year
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryReports'
+      summary: Get category metrics for a year
+      tags:
+      - Categories
+      x-accepts: application/json
+  /categories/{id}/cited/year/{year}:
+    get:
+      description: |-
+        The Cited Subject Category table lists journals that cite other journals in the subject category.
+
+        Category Cited data contains:
+
+        - Citing **Journal** with the link to WoS Journal API entity.<br /> Citing journals are sorted in descending order. At the top is the journal with the largest number of citations to the subject category.
+        - **Cited journals**: The number of journals in the subject category.
+        - **Cited year (all)**:  The total number of citations from the citing journal. This total includes the number shown under each year and the number in the "Rest".
+        - **Cited Year (10-year interval)**: The publication year of the cited articles.
+        - **Cited Year (rest)**: All publication years of cited articles prior to the ten-year period defined. For example, if the cited years are 2013-2004, the Rest number will show the number of citations from the citing journal in 2012 to articles published in 2003 and earlier in journals in the subject category.
+
+
+          Numbers in the "All Journals" are sums of the numbers for each year. "All others" refers to citing journals not listed by name.
+
+          For detailed information, please visit [this page](http://jcr.help.clarivate.com/Content/cited-category-data.htm)
+      parameters:
+      - description: Category ID
+        example: RU_SCIE
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: JCR Year (from 2003)
+        example: 2014
+        explode: false
+        in: path
+        name: year
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      - description: Specifying a page to retrieve
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          format: int32
+          type: integer
+        style: form
+      - description: Number of returned results, ranging from 0 to 50
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          format: int32
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriesCited'
+          description: OK
+      summary: Get journals that cite all journals in the category for the JCR year
+      tags:
+      - Categories
+      x-accepts: application/json
+  /categories/{id}/citing/year/{year}:
+    get:
+      description: |-
+        Category Citing data contains:
+
+        - Cited **Journal** with the link to WoS Journal API entity.<br /> Cited journals are sorted in descending order. At the top is the journal with the largest number of citations to the subject category.
+        - **Citing journals**: The number of journals in the subject category.
+        - **Cited year (all)**:  The total number of citations to the citing journal. This total includes the number shown under each year and the number in the "Rest".
+        - **Cited Year (10-year interval)**: The publication year of the cited articles.
+        - **Cited Year (rest)**: All publication years of cited articles prior to the ten-year period defined. For example, if the cited years are 2013-2004, the Rest number will show the number of citations from the citing journal in 2012 to articles published in 2003 and earlier in journals in the subject category.
+
+
+          Numbers in the "All Journals" are sums of the numbers for each year. "All others" refers to citing journals not listed by name.
+
+          For detailed information, please visit [this page](http://jcr.help.clarivate.com/Content/citing-category-data.htm)
+      parameters:
+      - description: Category ID
+        example: RU_SCIE
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: JCR Year (from 2003)
+        example: 2014
+        explode: false
+        in: path
+        name: year
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      - description: Specifying a page to retrieve
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          format: int32
+          type: integer
+        style: form
+      - description: Number of returned results, ranging from 0 to 50
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          format: int32
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriesCiting'
+          description: OK
+      summary: Get journals that were cited by all journals from the category for
+        the JCR year
+      tags:
+      - Categories
+      x-accepts: application/json
+components:
+  schemas:
+    JournalList:
+      example:
+        hits:
+        - ranks:
+            jci:
+            - quartile: quartile
+              rank: rank
+              category: category
+              jciPercentile: 2.3021358869347655
+            - quartile: quartile
+              rank: rank
+              category: category
+              jciPercentile: 2.3021358869347655
+            jif:
+            - quartile: quartile
+              edition: edition
+              self: self
+              rank: rank
+              category: category
+            - quartile: quartile
+              edition: edition
+              self: self
+              rank: rank
+              category: category
+          journalCitationReports:
+          - year: 5
+            url: url
+          - year: 5
+            url: url
+          name: name
+          self: self
+          id: id
+          categories:
+          - '{}'
+          - '{}'
+          metrics:
+            sourceMetrics:
+              jifPercentile: 5.637376656633329
+            impactMetrics:
+              jci: jci
+              jif: jif
+          matches:
+          - field: field
+            value:
+            - value
+            - value
+          - field: field
+            value:
+            - value
+            - value
+        - ranks:
+            jci:
+            - quartile: quartile
+              rank: rank
+              category: category
+              jciPercentile: 2.3021358869347655
+            - quartile: quartile
+              rank: rank
+              category: category
+              jciPercentile: 2.3021358869347655
+            jif:
+            - quartile: quartile
+              edition: edition
+              self: self
+              rank: rank
+              category: category
+            - quartile: quartile
+              edition: edition
+              self: self
+              rank: rank
+              category: category
+          journalCitationReports:
+          - year: 5
+            url: url
+          - year: 5
+            url: url
+          name: name
+          self: self
+          id: id
+          categories:
+          - '{}'
+          - '{}'
+          metrics:
+            sourceMetrics:
+              jifPercentile: 5.637376656633329
+            impactMetrics:
+              jci: jci
+              jif: jif
+          matches:
+          - field: field
+            value:
+            - value
+            - value
+          - field: field
+            value:
+            - value
+            - value
+        metadata:
+          total: 0
+          limit: 1
+          page: 6
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        hits:
+          items:
+            $ref: '#/components/schemas/JournalListRecord'
+          type: array
+      type: object
+    JournalListRecord:
+      example:
+        ranks:
+          jci:
+          - quartile: quartile
+            rank: rank
+            category: category
+            jciPercentile: 2.3021358869347655
+          - quartile: quartile
+            rank: rank
+            category: category
+            jciPercentile: 2.3021358869347655
+          jif:
+          - quartile: quartile
+            edition: edition
+            self: self
+            rank: rank
+            category: category
+          - quartile: quartile
+            edition: edition
+            self: self
+            rank: rank
+            category: category
+        journalCitationReports:
+        - year: 5
+          url: url
+        - year: 5
+          url: url
+        name: name
+        self: self
+        id: id
+        categories:
+        - '{}'
+        - '{}'
+        metrics:
+          sourceMetrics:
+            jifPercentile: 5.637376656633329
+          impactMetrics:
+            jci: jci
+            jif: jif
+        matches:
+        - field: field
+          value:
+          - value
+          - value
+        - field: field
+          value:
+          - value
+          - value
+      properties:
+        id:
+          description: Journal unique identifier
+          type: string
+        self:
+          description: Link to the journal entity
+          type: string
+        matches:
+          items:
+            $ref: '#/components/schemas/SearchMatch'
+          type: array
+        name:
+          description: Journal full name
+          type: string
+        categories:
+          description: List of journal categories with related editions/databases
+          items:
+            properties:
+              url:
+                description: Link to the JCR Category
+                type: string
+              name:
+                description: Category name
+                type: string
+              edition:
+                description: Edition/database name
+                type: string
+            type: object
+          type: array
+        journalCitationReports:
+          description: Journal citation report link (only if the filter "jcrYear"
+            was selected)
+          items:
+            $ref: '#/components/schemas/JournalListRecord_journalCitationReports'
+          type: array
+        metrics:
+          $ref: '#/components/schemas/JournalListRecord_metrics'
+        ranks:
+          $ref: '#/components/schemas/JournalListRecord_ranks'
+      type: object
+    JournalRecord:
+      example:
+        jcrTitle: jcrTitle
+        language: language
+        frequency: 0
+        isoTitle: isoTitle
+        issn: issn
+        firstIssueYear: 6
+        journalCitationReports:
+        - '{}'
+        - '{}'
+        openAccess:
+          startYear: 1
+          endYear: 5
+        name: name
+        eIssn: eIssn
+        publisher:
+          address: address
+          countryRegion: countryRegion
+          name: name
+          id: id
+        id: id
+        categories:
+        - '{}'
+        - '{}'
+        previousIssn:
+        - previousIssn
+        - previousIssn
+      properties:
+        id:
+          description: Journal unique identifier
+          type: string
+        name:
+          description: Journal title
+          type: string
+        jcrTitle:
+          description: Journal JCR abbreviation
+          type: string
+        isoTitle:
+          description: Journal title in [ISO format](https://www.issn.org/services/online-services/access-to-the-ltwa/)
+          type: string
+        issn:
+          description: Current [ISSN identifier](https://www.issn.org/understanding-the-issn/what-is-an-issn/)
+          type: string
+        previousIssn:
+          description: Previously assignled ISSN identifiers
+          items:
+            type: string
+          type: array
+        eIssn:
+          description: (For online journals) [Electronic ISSN](https://www.issn.org/understanding-the-issn/assignment-rules/the-issn-for-electronic-media/)
+            identifier
+          type: string
+        publisher:
+          $ref: '#/components/schemas/Publisher'
+        frequency:
+          description: Number of times per year the journal is published
+          format: int32
+          type: integer
+        firstIssueYear:
+          description: First year the journal was published
+          format: int32
+          type: integer
+        language:
+          description: Journal publication language
+          type: string
+        openAccess:
+          $ref: '#/components/schemas/OpenAccess'
+        categories:
+          description: List of journal categories with related editions/databases
+          items:
+            properties:
+              url:
+                description: Link to the JCR Category
+                type: string
+              name:
+                description: Category name
+                type: string
+              edition:
+                description: Edition/database name
+                type: string
+            type: object
+          type: array
+        journalCitationReports:
+          description: List of all available Journal Citation Reports by year
+          items:
+            properties:
+              year:
+                description: Journal Citation Report year (1997-2020)
+                format: int32
+                type: integer
+              url:
+                description: Link to the report
+                type: string
+            type: object
+          type: array
+      type: object
+    Categories:
+      description: List of journal categories with related editions/databases
+      items:
+        properties:
+          url:
+            description: Link to the JCR Category
+            type: string
+          name:
+            description: Category name
+            type: string
+          edition:
+            description: Edition/database name
+            type: string
+        type: object
+      type: array
+    JournalCitationReport:
+      description: List of all available Journal Citation Reports by year
+      items:
+        properties:
+          year:
+            description: Journal Citation Report year (1997-2020)
+            format: int32
+            type: integer
+          url:
+            description: Link to the report
+            type: string
+        type: object
+      type: array
+    OpenAccess:
+      description: Journal open access status
+      example:
+        startYear: 1
+        endYear: 5
+      properties:
+        startYear:
+          description: First year of journal open access
+          format: int32
+          type: integer
+        endYear:
+          description: Last year of journal open access
+          format: int32
+          type: integer
+      type: object
+    Publisher:
+      description: Information about the journal publisher
+      example:
+        address: address
+        countryRegion: countryRegion
+        name: name
+        id: id
+      properties:
+        id:
+          description: Publisher unique identifier
+          type: string
+        name:
+          description: Publisher name
+          type: string
+        address:
+          description: Publisher address
+          type: string
+        countryRegion:
+          description: Publisher country/region
+          type: string
+      type: object
+    JournalData:
+      description: Links to the Cited and Citing endpoints, with the total count of
+        records.
+      example:
+        cited:
+          count: 1
+          url: url
+        citing:
+          count: 6
+          url: url
+      properties:
+        cited:
+          $ref: '#/components/schemas/CitedData'
+        citing:
+          $ref: '#/components/schemas/CitingData'
+      type: object
+    JournalReports:
+      example:
+        journalProfile:
+          occurrenceCountries:
+          - countryRegion: countryRegion
+            occurrence: 6
+          - countryRegion: countryRegion
+            occurrence: 6
+          citations:
+            other: 6
+            goldOA: 8
+            subscription: 9
+            unlinked: 3
+          citableItems:
+            other: 6
+            goldOA: 9
+            subscription: 9
+          startYear: 4
+          endYear: 5
+          occurrenceOrganizations:
+          - organization: organization
+            occurrence: 1
+          - organization: organization
+            occurrence: 1
+        journal:
+          name: name
+          self: self
+          id: id
+        ranks:
+          eigenFactorScore:
+          - quartile: quartile
+            edition: edition
+            self: self
+            rank: rank
+            category: category
+          - quartile: quartile
+            edition: edition
+            self: self
+            rank: rank
+            category: category
+          jci:
+          - quartile: quartile
+            rank: rank
+            category: category
+            jciPercentile: 2.3021358869347655
+          - quartile: quartile
+            rank: rank
+            category: category
+            jciPercentile: 2.3021358869347655
+          immediacyIndex:
+          - quartile: quartile
+            edition: edition
+            self: self
+            rank: rank
+            category: category
+          - quartile: quartile
+            edition: edition
+            self: self
+            rank: rank
+            category: category
+          esiCitations:
+          - quartile: quartile
+            rank: rank
+            category: category
+          - quartile: quartile
+            rank: rank
+            category: category
+          articleInfluence:
+          - quartile: quartile
+            edition: edition
+            self: self
+            rank: rank
+            category: category
+          - quartile: quartile
+            edition: edition
+            self: self
+            rank: rank
+            category: category
+          jif:
+          - quartile: quartile
+            jifPercentile: 1.0246457001441578
+            edition: edition
+            self: self
+            rank: rank
+            category: category
+          - quartile: quartile
+            jifPercentile: 1.0246457001441578
+            edition: edition
+            self: self
+            rank: rank
+            category: category
+        year: 0
+        metrics:
+          sourceMetrics:
+            citableItems:
+              total: 3
+              articlesPercentage: 2.027123023002322
+            jifPercentile: 4.145608029883936
+            halfLife:
+              cited: 7.386281948385884
+              citing: 1.2315135367772556
+          influenceMetrics:
+            eigenFactor:
+              score: 2.3021358869347655
+              normalized: 7.061401241503109
+            articleInfluence: 9.301444243932576
+          impactMetrics:
+            jci: 5.637376656633329
+            immediacyIndex: 5.962133916683182
+            jifWithoutSelfCitations: jifWithoutSelfCitations
+            jif: jif
+            jif5Years: 1.4658129805029452
+            totalCites: 6
+        sourceData:
+          other:
+            references: 1
+            count: 7
+          reviews:
+            references: 1
+            count: 7
+          articles:
+            references: 1
+            count: 7
+        journalData:
+          cited:
+            count: 1
+            url: url
+          citing:
+            count: 6
+            url: url
+      properties:
+        year:
+          description: Report year
+          format: int32
+          type: integer
+        journal:
+          $ref: '#/components/schemas/JournalReportsJournal'
+        metrics:
+          $ref: '#/components/schemas/JournalReports_metrics'
+        ranks:
+          $ref: '#/components/schemas/Ranks'
+        journalData:
+          $ref: '#/components/schemas/JournalData'
+        sourceData:
+          $ref: '#/components/schemas/SourceData'
+        journalProfile:
+          $ref: '#/components/schemas/JournalProfile'
+      type: object
+    JournalReportsJournal:
+      description: Main information about the report journal
+      example:
+        name: name
+        self: self
+        id: id
+      properties:
+        id:
+          description: Journal unique identifier
+          type: string
+        self:
+          description: Journals API link to the journal entity
+          type: string
+        name:
+          description: Journal title
+          type: string
+      type: object
+    ImpactMetrics:
+      example:
+        jci: 5.637376656633329
+        immediacyIndex: 5.962133916683182
+        jifWithoutSelfCitations: jifWithoutSelfCitations
+        jif: jif
+        jif5Years: 1.4658129805029452
+        totalCites: 6
+      properties:
+        totalCites:
+          description: The total number of times that a journal has been cited by
+            all journals included in the database in the JCR year. For more information,
+            please visit the [JCR Glossary page](http://jcr.help.clarivate.com/Content/glossary.htm#610062182_anchor38)
+          format: int32
+          type: integer
+        jif:
+          description: Journal Impact Factor. For more information, please visit the
+            [JCR Glossary page](http://jcr.help.clarivate.com/Content/glossary.htm#610062182_anchor28)
+          type: string
+        jifWithoutSelfCitations:
+          description: Journal Impact Factor without self cites.
+          type: string
+        jif5Years:
+          description: Average number of times articles from the journal published
+            in the past five years have been cited in the JCR year
+          format: double
+          type: number
+        immediacyIndex:
+          description: Average number of times an article is cited in the year it
+            is published. For more information, please visit the [JCR Glossary page](http://jcr.help.clarivate.com/Content/glossary.htm#610062182_anchor25)
+          format: double
+          type: number
+        jci:
+          description: The Journal Citation Indicator is a new field-normalized metric
+            that is calculated for all journals in the Web of Science Core Collection.
+            The value represents the average category-normalized citation impact for
+            papers published in the prior three-year period.
+          format: double
+          type: number
+      type: object
+    InfluenceMetrics:
+      example:
+        eigenFactor:
+          score: 2.3021358869347655
+          normalized: 7.061401241503109
+        articleInfluence: 9.301444243932576
+      properties:
+        eigenFactor:
+          $ref: '#/components/schemas/InfluenceMetrics_eigenFactor'
+        articleInfluence:
+          description: Article influence metrics. For more information, please visit
+            [this page](http://jcr.help.clarivate.com/Content/glossary-article-influence-score.htm)
+          format: double
+          type: number
+      type: object
+    SourceMetrics:
+      example:
+        citableItems:
+          total: 3
+          articlesPercentage: 2.027123023002322
+        jifPercentile: 4.145608029883936
+        halfLife:
+          cited: 7.386281948385884
+          citing: 1.2315135367772556
+      properties:
+        citableItems:
+          $ref: '#/components/schemas/SourceMetrics_citableItems'
+        jifPercentile:
+          description: Average Journal Impact Factor Percentile. Detailed information
+            could be found in [this page](http://jcr.help.clarivate.com/Content/glossary-average-jif-percentile.htm)
+          format: double
+          type: number
+        halfLife:
+          $ref: '#/components/schemas/HalfLife'
+      type: object
+    Ranks:
+      description: JCR rank and ESI Total cites. Detailed information could be found
+        on [this page](http://jcr.help.clarivate.com/Content/journal-profile-rank.htm)
+      example:
+        eigenFactorScore:
+        - quartile: quartile
+          edition: edition
+          self: self
+          rank: rank
+          category: category
+        - quartile: quartile
+          edition: edition
+          self: self
+          rank: rank
+          category: category
+        jci:
+        - quartile: quartile
+          rank: rank
+          category: category
+          jciPercentile: 2.3021358869347655
+        - quartile: quartile
+          rank: rank
+          category: category
+          jciPercentile: 2.3021358869347655
+        immediacyIndex:
+        - quartile: quartile
+          edition: edition
+          self: self
+          rank: rank
+          category: category
+        - quartile: quartile
+          edition: edition
+          self: self
+          rank: rank
+          category: category
+        esiCitations:
+        - quartile: quartile
+          rank: rank
+          category: category
+        - quartile: quartile
+          rank: rank
+          category: category
+        articleInfluence:
+        - quartile: quartile
+          edition: edition
+          self: self
+          rank: rank
+          category: category
+        - quartile: quartile
+          edition: edition
+          self: self
+          rank: rank
+          category: category
+        jif:
+        - quartile: quartile
+          jifPercentile: 1.0246457001441578
+          edition: edition
+          self: self
+          rank: rank
+          category: category
+        - quartile: quartile
+          jifPercentile: 1.0246457001441578
+          edition: edition
+          self: self
+          rank: rank
+          category: category
+      properties:
+        jif:
+          items:
+            $ref: '#/components/schemas/Ranks_jif'
+          type: array
+        articleInfluence:
+          items:
+            $ref: '#/components/schemas/RankQuartileData'
+          type: array
+        eigenFactorScore:
+          items:
+            $ref: '#/components/schemas/RankQuartileData'
+          type: array
+        immediacyIndex:
+          items:
+            $ref: '#/components/schemas/RankQuartileData'
+          type: array
+        jci:
+          items:
+            $ref: '#/components/schemas/JournalListRecord_ranks_jci'
+          type: array
+        esiCitations:
+          items:
+            $ref: '#/components/schemas/Ranks_esiCitations'
+          type: array
+      type: object
+    SourceData:
+      description: Information about number of citable items in the JCR year. For
+        the detailed description how this data is calculated please visit [this page](http://jcr.help.clarivate.com/Content/source-data.htm?Highlight=Source%20Data)
+      example:
+        other:
+          references: 1
+          count: 7
+        reviews:
+          references: 1
+          count: 7
+        articles:
+          references: 1
+          count: 7
+      properties:
+        articles:
+          $ref: '#/components/schemas/SourceData_articles'
+        reviews:
+          $ref: '#/components/schemas/SourceData_articles'
+        other:
+          $ref: '#/components/schemas/SourceData_articles'
+      type: object
+    JournalProfile:
+      description: Journal Profile uses JCR year source data, and the two prior years
+        to develop a picture of the countries, regions, and organizations that have
+        published materials in this journal in the past three years.
+      example:
+        occurrenceCountries:
+        - countryRegion: countryRegion
+          occurrence: 6
+        - countryRegion: countryRegion
+          occurrence: 6
+        citations:
+          other: 6
+          goldOA: 8
+          subscription: 9
+          unlinked: 3
+        citableItems:
+          other: 6
+          goldOA: 9
+          subscription: 9
+        startYear: 4
+        endYear: 5
+        occurrenceOrganizations:
+        - organization: organization
+          occurrence: 1
+        - organization: organization
+          occurrence: 1
+      properties:
+        startYear:
+          description: First year of the profile
+          format: int32
+          type: integer
+        endYear:
+          description: Last year of the profile (equal to the Report year)
+          format: int32
+          type: integer
+        citableItems:
+          $ref: '#/components/schemas/JournalProfile_citableItems'
+        citations:
+          $ref: '#/components/schemas/JournalProfile_citations'
+        occurrenceCountries:
+          description: Information about of the top 10 countries and regions that
+            have published materials in this journal in the past three years.
+          items:
+            $ref: '#/components/schemas/JournalProfile_occurrenceCountries'
+          type: array
+        occurrenceOrganizations:
+          description: Information about of the top 10 organizations that have published
+            materials in this journal in the past three years.
+          items:
+            $ref: '#/components/schemas/JournalProfile_occurrenceOrganizations'
+          type: array
+      type: object
+    JournalsCited:
+      example:
+        hits:
+        - journal:
+            name: name
+            self: self
+          citing:
+          - '{}'
+          - '{}'
+        - journal:
+            name: name
+            self: self
+          citing:
+          - '{}'
+          - '{}'
+        metadata:
+          total: 0
+          limit: 1
+          page: 6
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        hits:
+          items:
+            $ref: '#/components/schemas/JournalsCited_hits'
+          type: array
+      type: object
+    JournalsCiting:
+      example:
+        hits:
+        - journal:
+            name: name
+            self: self
+          cited:
+          - '{}'
+          - '{}'
+        - journal:
+            name: name
+            self: self
+          cited:
+          - '{}'
+          - '{}'
+        metadata:
+          total: 0
+          limit: 1
+          page: 6
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        hits:
+          items:
+            $ref: '#/components/schemas/JournalsCiting_hits'
+          type: array
+      type: object
+    JournalHistoryRecord:
+      description: TBD
+      example:
+        isoTitle:
+        - isoTitle: isoTitle
+          year:
+            start: 7
+            end: 9
+        - isoTitle: isoTitle
+          year:
+            start: 7
+            end: 9
+        issn:
+        - issn: issn
+          year:
+            start: 1
+            end: 5
+        - issn: issn
+          year:
+            start: 1
+            end: 5
+        name:
+        - year:
+            start: 0
+            end: 6
+          name: name
+        - year:
+            start: 0
+            end: 6
+          name: name
+        publisher:
+        - year:
+            start: 5
+            end: 2
+          publisher:
+            address: address
+            countryRegion: countryRegion
+            name: name
+        - year:
+            start: 5
+            end: 2
+          publisher:
+            address: address
+            countryRegion: countryRegion
+            name: name
+      properties:
+        name:
+          description: History of assigned names
+          items:
+            $ref: '#/components/schemas/JournalHistoryRecord_name'
+          type: array
+        issn:
+          description: Previously assigned ISSN identifiers
+          items:
+            $ref: '#/components/schemas/JournalHistoryRecord_issn'
+          type: array
+        publisher:
+          description: Previously assigned publishers
+          items:
+            $ref: '#/components/schemas/JournalHistoryRecord_publisher_1'
+          type: array
+        isoTitle:
+          description: Previously assigned ISO titles
+          items:
+            $ref: '#/components/schemas/JournalHistoryRecord_isoTitle'
+          type: array
+      type: object
+    JournalsCitesJournal:
+      example:
+        name: name
+        self: self
+      properties:
+        self:
+          type: string
+        name:
+          type: string
+      type: object
+    CategoryList:
+      example:
+        hits:
+        - categoryCitationReports:
+          - '{}'
+          - '{}'
+          name: name
+          self: self
+          edition: edition
+          id: id
+          matches:
+          - field: field
+            value:
+            - value
+            - value
+          - field: field
+            value:
+            - value
+            - value
+        - categoryCitationReports:
+          - '{}'
+          - '{}'
+          name: name
+          self: self
+          edition: edition
+          id: id
+          matches:
+          - field: field
+            value:
+            - value
+            - value
+          - field: field
+            value:
+            - value
+            - value
+        metadata:
+          total: 0
+          limit: 1
+          page: 6
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        hits:
+          description: List of retrieved categories
+          items:
+            $ref: '#/components/schemas/CategoryListRecord'
+          type: array
+      type: object
+    CategoryListRecord:
+      example:
+        categoryCitationReports:
+        - '{}'
+        - '{}'
+        name: name
+        self: self
+        edition: edition
+        id: id
+        matches:
+        - field: field
+          value:
+          - value
+          - value
+        - field: field
+          value:
+          - value
+          - value
+      properties:
+        id:
+          description: Category unique identifier
+          type: string
+        self:
+          description: Link to the category entity
+          type: string
+        matches:
+          description: Search string matches across category names
+          items:
+            $ref: '#/components/schemas/SearchMatch'
+          type: array
+        name:
+          description: Category name
+          type: string
+        edition:
+          description: Category edition (SCIE/SSCI)
+          type: string
+        categoryCitationReports:
+          items:
+            description: List of reports available by JCR year
+            properties:
+              url:
+                type: string
+              year:
+                format: int32
+                type: integer
+            type: object
+          type: array
+      type: object
+    CategoryRecord:
+      example:
+        categoryCitationReports:
+        - '{}'
+        - '{}'
+        name: name
+        edition: edition
+        description: description
+        id: id
+        categoryCode: categoryCode
+      properties:
+        id:
+          description: Category unique identifier
+          type: string
+        name:
+          description: Category name
+          type: string
+        edition:
+          description: Category edition
+          type: string
+        categoryCode:
+          description: Two-letter category code
+          type: string
+        description:
+          description: Detailed information about a category
+          type: string
+        categoryCitationReports:
+          items:
+            description: List of reports available by JCR year
+            properties:
+              url:
+                type: string
+              year:
+                format: int32
+                type: integer
+            type: object
+          type: array
+      required:
+      - id
+      type: object
+    CategoryCitationReports:
+      items:
+        description: List of reports available by JCR year
+        properties:
+          url:
+            type: string
+          year:
+            format: int32
+            type: integer
+        type: object
+      type: array
+    CategoryReports:
+      example:
+        immediacy:
+          count: 2.027123023002322
+          citesCurrentYear: 4
+          publishedCurrentYear: 7
+        year: 0
+        jif:
+          median: 5.637376656633329
+          aggregate:
+            publishedYearAgo: 9
+            count: count
+            citesTwoYearsAgo: 7
+            publishedTwoYearsAgo: 3
+            citesYearAgo: 2
+        cites: 5
+        categoryData:
+          cited:
+            count: 1
+            url: url
+          citing:
+            count: 6
+            url: url
+        halfLife:
+          cited: 7.386281948385884
+          citing: 1.2315135367772556
+        sourceData:
+          other:
+            references: 1
+            count: 7
+          reviews:
+            references: 3
+            count: 6
+          articles:
+            references: 9
+            count: 8
+        journals:
+          count: 6
+          url: url
+        articles: 1
+        frequency:
+          hemiannual: 1
+          triannual: 1
+          bimonthly: 1
+          daily: 9
+          annual: 1
+          monthly: 4
+          biweekly: 5
+          irregular: 6
+          quarterly: 7
+          semiannual: 6
+          weekly: 9
+      properties:
+        year:
+          format: int32
+          type: integer
+        journals:
+          $ref: '#/components/schemas/CategoryReports_journals'
+        articles:
+          format: int32
+          type: integer
+        cites:
+          format: int32
+          type: integer
+        jif:
+          $ref: '#/components/schemas/Jif'
+        immediacy:
+          $ref: '#/components/schemas/Immediacy'
+        halfLife:
+          $ref: '#/components/schemas/HalfLife'
+        frequency:
+          $ref: '#/components/schemas/Frequency'
+        sourceData:
+          $ref: '#/components/schemas/CategoryReportsSourceData'
+        categoryData:
+          $ref: '#/components/schemas/CategoryData'
+      required:
+      - year
+      type: object
+    Jif:
+      example:
+        median: 5.637376656633329
+        aggregate:
+          publishedYearAgo: 9
+          count: count
+          citesTwoYearsAgo: 7
+          publishedTwoYearsAgo: 3
+          citesYearAgo: 2
+      properties:
+        median:
+          format: double
+          type: number
+        aggregate:
+          $ref: '#/components/schemas/Jif_aggregate'
+      type: object
+    Immediacy:
+      example:
+        count: 2.027123023002322
+        citesCurrentYear: 4
+        publishedCurrentYear: 7
+      properties:
+        count:
+          format: double
+          type: number
+        citesCurrentYear:
+          format: int32
+          type: integer
+        publishedCurrentYear:
+          format: int32
+          type: integer
+      type: object
+    HalfLife:
+      example:
+        cited: 7.386281948385884
+        citing: 1.2315135367772556
+      properties:
+        cited:
+          format: double
+          type: number
+        citing:
+          format: double
+          type: number
+      type: object
+    Frequency:
+      description: Number of journals in the category according to the number of times
+        per year published
+      example:
+        hemiannual: 1
+        triannual: 1
+        bimonthly: 1
+        daily: 9
+        annual: 1
+        monthly: 4
+        biweekly: 5
+        irregular: 6
+        quarterly: 7
+        semiannual: 6
+        weekly: 9
+      properties:
+        annual:
+          format: int32
+          type: integer
+        hemiannual:
+          format: int32
+          type: integer
+        triannual:
+          format: int32
+          type: integer
+        semiannual:
+          format: int32
+          type: integer
+        quarterly:
+          format: int32
+          type: integer
+        bimonthly:
+          format: int32
+          type: integer
+        monthly:
+          format: int32
+          type: integer
+        biweekly:
+          format: int32
+          type: integer
+        weekly:
+          format: int32
+          type: integer
+        daily:
+          format: int32
+          type: integer
+        irregular:
+          format: int32
+          type: integer
+      type: object
+    CategoryReportsSourceData:
+      description: Aggregate Source Data counting the number of citable items and
+        the number of cited references in each type of item.
+      example:
+        other:
+          references: 1
+          count: 7
+        reviews:
+          references: 3
+          count: 6
+        articles:
+          references: 9
+          count: 8
+      properties:
+        articles:
+          $ref: '#/components/schemas/CategoryReportsSourceData_articles'
+        reviews:
+          $ref: '#/components/schemas/CategoryReportsSourceData_reviews'
+        other:
+          $ref: '#/components/schemas/SourceData_articles'
+      type: object
+    CategoryData:
+      example:
+        cited:
+          count: 1
+          url: url
+        citing:
+          count: 6
+          url: url
+      properties:
+        cited:
+          $ref: '#/components/schemas/CitedData'
+        citing:
+          $ref: '#/components/schemas/CitingData'
+      type: object
+    CategoriesCited:
+      example:
+        hits:
+        - journal:
+            citedJournals: 0
+            name: name
+            self: self
+          citing:
+          - '{}'
+          - '{}'
+        - journal:
+            citedJournals: 0
+            name: name
+            self: self
+          citing:
+          - '{}'
+          - '{}'
+        metadata:
+          total: 0
+          limit: 1
+          page: 6
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        hits:
+          items:
+            $ref: '#/components/schemas/CategoriesCited_hits'
+          type: array
+      type: object
+    CategoriesCiting:
+      example:
+        hits:
+        - journal:
+            citingJournals: 0
+            name: name
+            self: self
+          cited:
+          - '{}'
+          - '{}'
+        - journal:
+            citingJournals: 0
+            name: name
+            self: self
+          cited:
+          - '{}'
+          - '{}'
+        metadata:
+          total: 0
+          limit: 1
+          page: 6
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        hits:
+          items:
+            $ref: '#/components/schemas/CategoriesCiting_hits'
+          type: array
+      type: object
+    CitedData:
+      example:
+        count: 1
+        url: url
+      properties:
+        url:
+          description: Link to the Cited endpoint for the JCR year.
+          type: string
+        count:
+          description: Number of cited journals
+          format: int32
+          type: integer
+      type: object
+    CitingData:
+      example:
+        count: 6
+        url: url
+      properties:
+        url:
+          description: Link to the Citing endpoint for the JCR year.
+          type: string
+        count:
+          description: Number of citing journals
+          format: int32
+          type: integer
+      type: object
+    Cites:
+      items:
+        properties:
+          year:
+            type: string
+          count:
+            format: int32
+            type: integer
+        type: object
+      type: array
+    Metadata:
+      description: Information about total number of journals in the retrieve, number
+        of recodrs on the page, and the page number.
+      example:
+        total: 0
+        limit: 1
+        page: 6
+      properties:
+        total:
+          description: Total number of records for the request.
+          format: int32
+          type: integer
+        page:
+          description: Page number (default is 1)
+          format: int32
+          type: integer
+        limit:
+          description: Number of records on a page (default is 10).
+          format: int32
+          type: integer
+      type: object
+    SearchMatch:
+      description: Displays the field and value matched to the search string
+      example:
+        field: field
+        value:
+        - value
+        - value
+      properties:
+        field:
+          description: Name of the matched field
+          type: string
+        value:
+          description: Array of matched values (if several) with the HTML highligthing
+          items:
+            type: string
+          type: array
+      type: object
+    RankQuartileData:
+      example:
+        quartile: quartile
+        edition: edition
+        self: self
+        rank: rank
+        category: category
+      properties:
+        category:
+          type: string
+        edition:
+          type: string
+        self:
+          type: string
+        rank:
+          type: string
+        quartile:
+          type: string
+      type: object
+    JournalListRecord_journalCitationReports:
+      example:
+        year: 5
+        url: url
+      properties:
+        year:
+          description: JCR Year (from 1997)
+          format: int32
+          type: integer
+        url:
+          description: Link to the related report
+          type: string
+      type: object
+    JournalListRecord_metrics_impactMetrics:
+      example:
+        jci: jci
+        jif: jif
+      properties:
+        jif:
+          description: Journal Impact Factor
+          type: string
+        jci:
+          description: "null"
+          type: string
+      type: object
+    JournalListRecord_metrics_sourceMetrics:
+      example:
+        jifPercentile: 5.637376656633329
+      properties:
+        jifPercentile:
+          description: Journal Impact Factor Percentile
+          format: double
+          type: number
+      type: object
+    JournalListRecord_metrics:
+      description: Journal metrics information (only if the filter(s) "jif" or "jifPercentile"
+        were selected)
+      example:
+        sourceMetrics:
+          jifPercentile: 5.637376656633329
+        impactMetrics:
+          jci: jci
+          jif: jif
+      properties:
+        impactMetrics:
+          $ref: '#/components/schemas/JournalListRecord_metrics_impactMetrics'
+        sourceMetrics:
+          $ref: '#/components/schemas/JournalListRecord_metrics_sourceMetrics'
+      type: object
+    JournalListRecord_ranks_jif:
+      example:
+        quartile: quartile
+        edition: edition
+        self: self
+        rank: rank
+        category: category
+      properties:
+        category:
+          type: string
+        edition:
+          type: string
+        self:
+          type: string
+        rank:
+          type: string
+        quartile:
+          type: string
+      type: object
+    JournalListRecord_ranks_jci:
+      example:
+        quartile: quartile
+        rank: rank
+        category: category
+        jciPercentile: 2.3021358869347655
+      properties:
+        category:
+          type: string
+        rank:
+          type: string
+        quartile:
+          type: string
+        jciPercentile:
+          format: double
+          type: number
+      type: object
+    JournalListRecord_ranks:
+      description: Journal ranks information (only if the filter "jifQuartle" was
+        selected)
+      example:
+        jci:
+        - quartile: quartile
+          rank: rank
+          category: category
+          jciPercentile: 2.3021358869347655
+        - quartile: quartile
+          rank: rank
+          category: category
+          jciPercentile: 2.3021358869347655
+        jif:
+        - quartile: quartile
+          edition: edition
+          self: self
+          rank: rank
+          category: category
+        - quartile: quartile
+          edition: edition
+          self: self
+          rank: rank
+          category: category
+      properties:
+        jif:
+          items:
+            $ref: '#/components/schemas/JournalListRecord_ranks_jif'
+          type: array
+        jci:
+          items:
+            $ref: '#/components/schemas/JournalListRecord_ranks_jci'
+          type: array
+      type: object
+    JournalReports_metrics:
+      description: Key metrics information, including Impact Metrics (such as Journal
+        Impact Factor), Influence Metrics (such as Eigen Factor), and Source Metrics
+        (such as Citation Half-Life)
+      example:
+        sourceMetrics:
+          citableItems:
+            total: 3
+            articlesPercentage: 2.027123023002322
+          jifPercentile: 4.145608029883936
+          halfLife:
+            cited: 7.386281948385884
+            citing: 1.2315135367772556
+        influenceMetrics:
+          eigenFactor:
+            score: 2.3021358869347655
+            normalized: 7.061401241503109
+          articleInfluence: 9.301444243932576
+        impactMetrics:
+          jci: 5.637376656633329
+          immediacyIndex: 5.962133916683182
+          jifWithoutSelfCitations: jifWithoutSelfCitations
+          jif: jif
+          jif5Years: 1.4658129805029452
+          totalCites: 6
+      properties:
+        impactMetrics:
+          $ref: '#/components/schemas/ImpactMetrics'
+        influenceMetrics:
+          $ref: '#/components/schemas/InfluenceMetrics'
+        sourceMetrics:
+          $ref: '#/components/schemas/SourceMetrics'
+      type: object
+    InfluenceMetrics_eigenFactor:
+      description: Eigenfactor score metrics (score and normalized score), available
+        for journals reports dated 2007 or later. For more information, please visit
+        the [JCR Glossary page](http://jcr.help.clarivate.com/Content/glossary.htm#610062182_anchor23)
+      example:
+        score: 2.3021358869347655
+        normalized: 7.061401241503109
+      properties:
+        score:
+          description: Eigenfactor score. For more information, please visit the [JCR
+            Glossary page](http://jcr.help.clarivate.com/Content/glossary.htm#610062182_anchor24)
+          format: double
+          type: number
+        normalized:
+          description: Normalized Eigenfactor score. For more information, please
+            visit the [JCR Glossary page](http://jcr.help.clarivate.com/Content/glossary.htm#610062182_anchor33)
+          format: double
+          type: number
+      type: object
+    SourceMetrics_citableItems:
+      example:
+        total: 3
+        articlesPercentage: 2.027123023002322
+      properties:
+        total:
+          format: int32
+          type: integer
+        articlesPercentage:
+          format: double
+          type: number
+      type: object
+    Ranks_jif:
+      example:
+        quartile: quartile
+        jifPercentile: 1.0246457001441578
+        edition: edition
+        self: self
+        rank: rank
+        category: category
+      properties:
+        category:
+          type: string
+        edition:
+          type: string
+        self:
+          type: string
+        rank:
+          type: string
+        quartile:
+          type: string
+        jifPercentile:
+          format: double
+          type: number
+      type: object
+    Ranks_esiCitations:
+      example:
+        quartile: quartile
+        rank: rank
+        category: category
+      properties:
+        category:
+          type: string
+        rank:
+          type: string
+        quartile:
+          type: string
+      type: object
+    SourceData_articles:
+      example:
+        references: 1
+        count: 7
+      properties:
+        count:
+          format: int32
+          type: integer
+        references:
+          format: int32
+          type: integer
+      type: object
+    JournalProfile_citableItems:
+      description: Open access citable items for the three years. Detailed information
+        could be found in [this page](http://jcr.help.clarivate.com/Content/open-access.htm)
+      example:
+        other: 6
+        goldOA: 9
+        subscription: 9
+      properties:
+        goldOA:
+          format: int32
+          type: integer
+        subscription:
+          format: int32
+          type: integer
+        other:
+          format: int32
+          type: integer
+      type: object
+    JournalProfile_citations:
+      description: Open access citations for the three years. Detailed information
+        could be found in [this page](http://jcr.help.clarivate.com/Content/open-access.htm)
+      example:
+        other: 6
+        goldOA: 8
+        subscription: 9
+        unlinked: 3
+      properties:
+        goldOA:
+          format: int32
+          type: integer
+        subscription:
+          format: int32
+          type: integer
+        other:
+          format: int32
+          type: integer
+        unlinked:
+          format: int32
+          type: integer
+      type: object
+    JournalProfile_occurrenceCountries:
+      example:
+        countryRegion: countryRegion
+        occurrence: 6
+      properties:
+        countryRegion:
+          description: Country/region name
+          type: string
+        occurrence:
+          description: Number of country/region's articles/reviews/etc
+          format: int32
+          type: integer
+      type: object
+    JournalProfile_occurrenceOrganizations:
+      example:
+        organization: organization
+        occurrence: 1
+      properties:
+        organization:
+          description: Organization name
+          type: string
+        occurrence:
+          description: Number of organization's articles/reviews/etc
+          format: int32
+          type: integer
+      type: object
+    JournalsCited_hits:
+      example:
+        journal:
+          name: name
+          self: self
+        citing:
+        - '{}'
+        - '{}'
+      properties:
+        journal:
+          $ref: '#/components/schemas/JournalsCitesJournal'
+        citing:
+          items:
+            properties:
+              year:
+                type: string
+              count:
+                format: int32
+                type: integer
+            type: object
+          type: array
+      type: object
+    JournalsCiting_hits:
+      example:
+        journal:
+          name: name
+          self: self
+        cited:
+        - '{}'
+        - '{}'
+      properties:
+        journal:
+          $ref: '#/components/schemas/JournalsCitesJournal'
+        cited:
+          items:
+            properties:
+              year:
+                type: string
+              count:
+                format: int32
+                type: integer
+            type: object
+          type: array
+      type: object
+    JournalHistoryRecord_year:
+      example:
+        start: 0
+        end: 6
+      properties:
+        start:
+          description: First year of name
+          format: int32
+          type: integer
+        end:
+          description: Last year of name
+          format: int32
+          type: integer
+      type: object
+    JournalHistoryRecord_name:
+      example:
+        year:
+          start: 0
+          end: 6
+        name: name
+      properties:
+        name:
+          description: Name
+          type: string
+        year:
+          $ref: '#/components/schemas/JournalHistoryRecord_year'
+      type: object
+    JournalHistoryRecord_year_1:
+      example:
+        start: 1
+        end: 5
+      properties:
+        start:
+          description: First year of ISSN
+          format: int32
+          type: integer
+        end:
+          description: Last year of ISSN
+          format: int32
+          type: integer
+      type: object
+    JournalHistoryRecord_issn:
+      example:
+        issn: issn
+        year:
+          start: 1
+          end: 5
+      properties:
+        issn:
+          description: ISSN identifier
+          type: string
+        year:
+          $ref: '#/components/schemas/JournalHistoryRecord_year_1'
+      type: object
+    JournalHistoryRecord_publisher:
+      example:
+        address: address
+        countryRegion: countryRegion
+        name: name
+      properties:
+        name:
+          description: Publisher name
+          type: string
+        address:
+          description: Publisher address
+          type: string
+        countryRegion:
+          description: Publisher country/region
+          type: string
+      type: object
+    JournalHistoryRecord_year_2:
+      example:
+        start: 5
+        end: 2
+      properties:
+        start:
+          description: First year of name, address, and country/region
+          format: int32
+          type: integer
+        end:
+          description: Last year of name, address, and country/region
+          format: int32
+          type: integer
+      type: object
+    JournalHistoryRecord_publisher_1:
+      example:
+        year:
+          start: 5
+          end: 2
+        publisher:
+          address: address
+          countryRegion: countryRegion
+          name: name
+      properties:
+        publisher:
+          $ref: '#/components/schemas/JournalHistoryRecord_publisher'
+        year:
+          $ref: '#/components/schemas/JournalHistoryRecord_year_2'
+      type: object
+    JournalHistoryRecord_year_3:
+      example:
+        start: 7
+        end: 9
+      properties:
+        start:
+          description: First year of title
+          format: int32
+          type: integer
+        end:
+          description: Last year of title
+          format: int32
+          type: integer
+      type: object
+    JournalHistoryRecord_isoTitle:
+      example:
+        isoTitle: isoTitle
+        year:
+          start: 7
+          end: 9
+      properties:
+        isoTitle:
+          description: ISO title
+          type: string
+        year:
+          $ref: '#/components/schemas/JournalHistoryRecord_year_3'
+      type: object
+    CategoryReports_journals:
+      example:
+        count: 6
+        url: url
+      properties:
+        count:
+          format: int32
+          type: integer
+        url:
+          type: string
+      type: object
+    Jif_aggregate:
+      example:
+        publishedYearAgo: 9
+        count: count
+        citesTwoYearsAgo: 7
+        publishedTwoYearsAgo: 3
+        citesYearAgo: 2
+      properties:
+        count:
+          type: string
+        citesYearAgo:
+          format: int32
+          type: integer
+        citesTwoYearsAgo:
+          format: int32
+          type: integer
+        publishedYearAgo:
+          format: int32
+          type: integer
+        publishedTwoYearsAgo:
+          format: int32
+          type: integer
+      type: object
+    CategoryReportsSourceData_articles:
+      example:
+        references: 9
+        count: 8
+      properties:
+        count:
+          description: Total count of articles
+          format: int32
+          type: integer
+        references:
+          description: Total count of article references
+          format: int32
+          type: integer
+      type: object
+    CategoryReportsSourceData_reviews:
+      example:
+        references: 3
+        count: 6
+      properties:
+        count:
+          description: Total count of reviews
+          format: int32
+          type: integer
+        references:
+          description: Total count of review references
+          format: int32
+          type: integer
+      type: object
+    CategoriesCited_journal:
+      example:
+        citedJournals: 0
+        name: name
+        self: self
+      properties:
+        self:
+          type: string
+        name:
+          type: string
+        citedJournals:
+          format: int32
+          type: integer
+      type: object
+    CategoriesCited_hits:
+      example:
+        journal:
+          citedJournals: 0
+          name: name
+          self: self
+        citing:
+        - '{}'
+        - '{}'
+      properties:
+        journal:
+          $ref: '#/components/schemas/CategoriesCited_journal'
+        citing:
+          items:
+            properties:
+              year:
+                type: string
+              count:
+                format: int32
+                type: integer
+            type: object
+          type: array
+      type: object
+    CategoriesCiting_journal:
+      example:
+        citingJournals: 0
+        name: name
+        self: self
+      properties:
+        self:
+          type: string
+        name:
+          type: string
+        citingJournals:
+          format: int32
+          type: integer
+      type: object
+    CategoriesCiting_hits:
+      example:
+        journal:
+          citingJournals: 0
+          name: name
+          self: self
+        cited:
+        - '{}'
+        - '{}'
+      properties:
+        journal:
+          $ref: '#/components/schemas/CategoriesCiting_journal'
+        cited:
+          items:
+            properties:
+              year:
+                type: string
+              count:
+                format: int32
+                type: integer
+            type: object
+          type: array
+      type: object
+

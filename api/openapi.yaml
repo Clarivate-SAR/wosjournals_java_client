@@ -11,8 +11,8 @@ info:
     \ Sales/Product teams to entitle to the API.\n\n## Credentials\nAll requests require\
     \ authentication with an API Key authentication flow. For more details, check\
     \ the [Guide](https://developer.clarivate.com/help/api-access#key_access).\n\n\
-    ## API Client Libraries\nThe current languages/frameworks are supported: [Python](https://github.com/Clarivate-SAR/wosjournals-py-client)\
-    \ | [Java](https://github.com/Clarivate-SAR/wosjournals_java_client) | [Javascript](https://github.com/Clarivate-SAR/wosjournals_javascript_client)\n\
+    ## API Client Libraries\nThe current languages/frameworks are supported: [Python](https://github.com/clarivate/wosjournals-python-client)\
+    \ | [Java](https://github.com/clarivate/wosjournals-java-client) | [Javascript](https://github.com/clarivate/wosjournals-javascript-client)\n\
     \n## Content\nYou can learn more about content at [Journal Citation Reports™ Product\
     \ page](https://clarivate.com/webofsciencegroup/solutions/journal-citation-reports/),\
     \ or in the [documentation](http://jcr.help.clarivate.com/Content/home.htm).\n\

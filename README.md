@@ -1,4 +1,4 @@
-# wos-journals-client
+# Web of Science Journals API Java Client
 
 Web of Science™ Journals API
 - API version: 1.0.0

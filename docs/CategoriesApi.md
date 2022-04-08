@@ -22,11 +22,11 @@ The endpoint allows to search, filter, or browse across the Categories content. 
 ### Example
 ```java
 // Import classes:
-import com.clarivate.wos.wos_journals_client.invoker.ApiClient;
-import com.clarivate.wos.wos_journals_client.invoker.ApiException;
-import com.clarivate.wos.wos_journals_client.invoker.Configuration;
-import com.clarivate.wos.wos_journals_client.invoker.models.*;
-import com.clarivate.wos.wos_journals_client.CategoriesApi;
+import com.clarivate.wos.journals.client.invoker.ApiClient;
+import com.clarivate.wos.journals.client.invoker.ApiException;
+import com.clarivate.wos.journals.client.invoker.Configuration;
+import com.clarivate.wos.journals.client.invoker.models.*;
+import com.clarivate.wos.journals.client.CategoriesApi;
 
 public class Example {
   public static void main(String[] args) {
@@ -92,11 +92,11 @@ The Cited Subject Category table lists journals that cite other journals in the 
 ### Example
 ```java
 // Import classes:
-import com.clarivate.wos.wos_journals_client.invoker.ApiClient;
-import com.clarivate.wos.wos_journals_client.invoker.ApiException;
-import com.clarivate.wos.wos_journals_client.invoker.Configuration;
-import com.clarivate.wos.wos_journals_client.invoker.models.*;
-import com.clarivate.wos.wos_journals_client.CategoriesApi;
+import com.clarivate.wos.journals.client.invoker.ApiClient;
+import com.clarivate.wos.journals.client.invoker.ApiException;
+import com.clarivate.wos.journals.client.invoker.Configuration;
+import com.clarivate.wos.journals.client.invoker.models.*;
+import com.clarivate.wos.journals.client.CategoriesApi;
 
 public class Example {
   public static void main(String[] args) {
@@ -160,11 +160,11 @@ Category Citing data contains:  - Cited **Journal** with the link to WoS Journal
 ### Example
 ```java
 // Import classes:
-import com.clarivate.wos.wos_journals_client.invoker.ApiClient;
-import com.clarivate.wos.wos_journals_client.invoker.ApiException;
-import com.clarivate.wos.wos_journals_client.invoker.Configuration;
-import com.clarivate.wos.wos_journals_client.invoker.models.*;
-import com.clarivate.wos.wos_journals_client.CategoriesApi;
+import com.clarivate.wos.journals.client.invoker.ApiClient;
+import com.clarivate.wos.journals.client.invoker.ApiException;
+import com.clarivate.wos.journals.client.invoker.Configuration;
+import com.clarivate.wos.journals.client.invoker.models.*;
+import com.clarivate.wos.journals.client.CategoriesApi;
 
 public class Example {
   public static void main(String[] args) {
@@ -228,11 +228,11 @@ The category profile provides a comprehensive overview, beginning in 2003, for e
 ### Example
 ```java
 // Import classes:
-import com.clarivate.wos.wos_journals_client.invoker.ApiClient;
-import com.clarivate.wos.wos_journals_client.invoker.ApiException;
-import com.clarivate.wos.wos_journals_client.invoker.Configuration;
-import com.clarivate.wos.wos_journals_client.invoker.models.*;
-import com.clarivate.wos.wos_journals_client.CategoriesApi;
+import com.clarivate.wos.journals.client.invoker.ApiClient;
+import com.clarivate.wos.journals.client.invoker.ApiException;
+import com.clarivate.wos.journals.client.invoker.Configuration;
+import com.clarivate.wos.journals.client.invoker.models.*;
+import com.clarivate.wos.journals.client.CategoriesApi;
 
 public class Example {
   public static void main(String[] args) {
@@ -290,11 +290,11 @@ For each JCR year all metrics related to a subject category in the Journal Citat
 ### Example
 ```java
 // Import classes:
-import com.clarivate.wos.wos_journals_client.invoker.ApiClient;
-import com.clarivate.wos.wos_journals_client.invoker.ApiException;
-import com.clarivate.wos.wos_journals_client.invoker.Configuration;
-import com.clarivate.wos.wos_journals_client.invoker.models.*;
-import com.clarivate.wos.wos_journals_client.CategoriesApi;
+import com.clarivate.wos.journals.client.invoker.ApiClient;
+import com.clarivate.wos.journals.client.invoker.ApiException;
+import com.clarivate.wos.journals.client.invoker.Configuration;
+import com.clarivate.wos.journals.client.invoker.models.*;
+import com.clarivate.wos.journals.client.CategoriesApi;
 
 public class Example {
   public static void main(String[] args) {

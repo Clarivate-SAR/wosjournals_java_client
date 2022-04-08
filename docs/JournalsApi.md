@@ -23,11 +23,11 @@ The endpoint allows to search, filter, or browse across the Journals content.  T
 ### Example
 ```java
 // Import classes:
-import com.clarivate.wos.wos_journals_client.invoker.ApiClient;
-import com.clarivate.wos.wos_journals_client.invoker.ApiException;
-import com.clarivate.wos.wos_journals_client.invoker.Configuration;
-import com.clarivate.wos.wos_journals_client.invoker.models.*;
-import com.clarivate.wos.wos_journals_client.JournalsApi;
+import com.clarivate.wos.journals.client.invoker.ApiClient;
+import com.clarivate.wos.journals.client.invoker.ApiException;
+import com.clarivate.wos.journals.client.invoker.Configuration;
+import com.clarivate.wos.journals.client.invoker.models.*;
+import com.clarivate.wos.journals.client.JournalsApi;
 
 public class Example {
   public static void main(String[] args) {
@@ -107,11 +107,11 @@ Cited Journal data show how many citations a journal received in the JCR year. C
 ### Example
 ```java
 // Import classes:
-import com.clarivate.wos.wos_journals_client.invoker.ApiClient;
-import com.clarivate.wos.wos_journals_client.invoker.ApiException;
-import com.clarivate.wos.wos_journals_client.invoker.Configuration;
-import com.clarivate.wos.wos_journals_client.invoker.models.*;
-import com.clarivate.wos.wos_journals_client.JournalsApi;
+import com.clarivate.wos.journals.client.invoker.ApiClient;
+import com.clarivate.wos.journals.client.invoker.ApiException;
+import com.clarivate.wos.journals.client.invoker.Configuration;
+import com.clarivate.wos.journals.client.invoker.models.*;
+import com.clarivate.wos.journals.client.JournalsApi;
 
 public class Example {
   public static void main(String[] args) {
@@ -175,11 +175,11 @@ The response contains:  - Cited **Journal** with the link to WoS Journal API ent
 ### Example
 ```java
 // Import classes:
-import com.clarivate.wos.wos_journals_client.invoker.ApiClient;
-import com.clarivate.wos.wos_journals_client.invoker.ApiException;
-import com.clarivate.wos.wos_journals_client.invoker.Configuration;
-import com.clarivate.wos.wos_journals_client.invoker.models.*;
-import com.clarivate.wos.wos_journals_client.JournalsApi;
+import com.clarivate.wos.journals.client.invoker.ApiClient;
+import com.clarivate.wos.journals.client.invoker.ApiException;
+import com.clarivate.wos.journals.client.invoker.Configuration;
+import com.clarivate.wos.journals.client.invoker.models.*;
+import com.clarivate.wos.journals.client.JournalsApi;
 
 public class Example {
   public static void main(String[] args) {
@@ -243,11 +243,11 @@ A journal entity contains: - basic bibliographic information about the journal, 
 ### Example
 ```java
 // Import classes:
-import com.clarivate.wos.wos_journals_client.invoker.ApiClient;
-import com.clarivate.wos.wos_journals_client.invoker.ApiException;
-import com.clarivate.wos.wos_journals_client.invoker.Configuration;
-import com.clarivate.wos.wos_journals_client.invoker.models.*;
-import com.clarivate.wos.wos_journals_client.JournalsApi;
+import com.clarivate.wos.journals.client.invoker.ApiClient;
+import com.clarivate.wos.journals.client.invoker.ApiException;
+import com.clarivate.wos.journals.client.invoker.Configuration;
+import com.clarivate.wos.journals.client.invoker.models.*;
+import com.clarivate.wos.journals.client.JournalsApi;
 
 public class Example {
   public static void main(String[] args) {
@@ -305,11 +305,11 @@ TBD
 ### Example
 ```java
 // Import classes:
-import com.clarivate.wos.wos_journals_client.invoker.ApiClient;
-import com.clarivate.wos.wos_journals_client.invoker.ApiException;
-import com.clarivate.wos.wos_journals_client.invoker.Configuration;
-import com.clarivate.wos.wos_journals_client.invoker.models.*;
-import com.clarivate.wos.wos_journals_client.JournalsApi;
+import com.clarivate.wos.journals.client.invoker.ApiClient;
+import com.clarivate.wos.journals.client.invoker.ApiException;
+import com.clarivate.wos.journals.client.invoker.Configuration;
+import com.clarivate.wos.journals.client.invoker.models.*;
+import com.clarivate.wos.journals.client.JournalsApi;
 
 public class Example {
   public static void main(String[] args) {
@@ -367,11 +367,11 @@ This endpoint returns the information about Journal Citation Report by year.  Th
 ### Example
 ```java
 // Import classes:
-import com.clarivate.wos.wos_journals_client.invoker.ApiClient;
-import com.clarivate.wos.wos_journals_client.invoker.ApiException;
-import com.clarivate.wos.wos_journals_client.invoker.Configuration;
-import com.clarivate.wos.wos_journals_client.invoker.models.*;
-import com.clarivate.wos.wos_journals_client.JournalsApi;
+import com.clarivate.wos.journals.client.invoker.ApiClient;
+import com.clarivate.wos.journals.client.invoker.ApiException;
+import com.clarivate.wos.journals.client.invoker.Configuration;
+import com.clarivate.wos.journals.client.invoker.models.*;
+import com.clarivate.wos.journals.client.JournalsApi;
 
 public class Example {
   public static void main(String[] args) {

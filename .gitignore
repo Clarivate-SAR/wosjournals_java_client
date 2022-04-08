@@ -19,3 +19,12 @@ hs_err_pid*
 target
 .gradle
 build
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+**/out/
+
+**/bin/

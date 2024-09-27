@@ -628,9 +628,26 @@ public class JournalsApi {
 
         Object localVarPostBody = null;
 
+//        String idWithSlashes = Arrays.stream(id.split("/"))
+//                .map(s -> localVarApiClient.escapeString(s))
+//                .collect(Collectors.joining("/"));
+
+        // fix #4
+        String[] split = id.split("/");
+
+        StringBuilder idWithSlashesJdk18 = new StringBuilder();
+        for (int i = 0; i < split.length; i++) {
+            if (i == 0) {
+                idWithSlashesJdk18.append(localVarApiClient.escapeString(split[i]));
+            } else {
+                idWithSlashesJdk18.append("/").append(localVarApiClient.escapeString(split[i]));
+            }
+
+        }
+
         // create path and map variables
         String localVarPath = "/journals/{id}"
-            .replaceAll("\\{" + "id" + "\\}", localVarApiClient.escapeString(id.toString()));
+                .replaceAll("\\{" + "id" + "\\}", idWithSlashesJdk18.toString());
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();

@@ -2,7 +2,6 @@
 
 Web of Science™ Journals API
 - API version: 1.0.0
-  - Build date: 2022-04-08T14:37:40.089+02:00[Europe/Paris]
 
 This API provides journal-level metadata and metrics for all journals in the Journal Citation Reports™ covered in the Web of Science Core Collection, including the Journal Impact Factor™ and other new metrics. Integrate journal data into your internal systems or retrieve journal indicators for bibliometrics studies.
 
@@ -186,7 +185,7 @@ import com.clarivate.wos.journals.client.CategoriesApi;
 public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
-    defaultClient.setBasePath("http://wos-journals-snapshot.cortellis.int.clarivate.com");
+    defaultClient.setBasePath("https://api.clarivate.com/apis/wos-journals/v1");
 
     CategoriesApi apiInstance = new CategoriesApi(defaultClient);
     String q = "q_example"; // String | Free-text search by category name.  Search logic is described in the section [Search](#search).
@@ -211,7 +210,7 @@ public class Example {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://wos-journals-snapshot.cortellis.int.clarivate.com*
+All URIs are relative to *https://api.clarivate.com/apis/wos-journals/v1*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
